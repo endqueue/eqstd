@@ -8,9 +8,10 @@ repository was made.
 **Status (2026-10-28):** built, 0.1.0. Both headers, the tests and the
 presets are written, and every test passes on macOS in Debug, Release and
 RelWithDebInfo, with Xcode, and under the `-asan` and `-tsan` presets, with
-no sanitizer report. Left: the Linux and Windows runs, the workspace
-wiring ("The repository and the workspace" below), and the hash map if it
-is wanted. "Decided while building it" at the end lists the choices the
+no sanitizer report. Pushed as `endqueue/eqstd` (b302f96). spudlib uses it
+since 2026-10-29 ("Who uses it" below). Left: the Linux and Windows runs,
+the rest of the workspace wiring ("The repository and the workspace"
+below), and the hash map if it is wanted. "Decided while building it" at the end lists the choices the
 spec left open.
 
 ## What it is
@@ -83,6 +84,11 @@ Namespace `eq::`. Over the C half, not beside it.
   GitHub repository (`endqueue/eqstd`) is created and pushed by the user.
 - trellis and Latran pin it in `deps.lock`; spudlib and ApricotFields find
   it at `../eqstd`, with a pinned fetch fallback, as their `.deps` are.
+  **spudlib: done** (2026-10-29): `spud_add_workspace_or_fetch` in its
+  `CMakeLists.txt` adds `../eqstd` when it is there, else fetches b302f96,
+  and links `eqstd` PRIVATE. trellis, latran and ApricotFields build it
+  through `../spudlib` today (checked on macOS); ApricotFields' own use and
+  the `deps.lock` entries are not done.
 - `check.sh`: eqstd may be included by any layer and includes none.
 - Its own semantic version (root `CLAUDE.md`, "Versions and releases").
 
@@ -91,7 +97,13 @@ Namespace `eq::`. Over the C half, not beside it.
 - spudlib: its C backends' hand-grown arrays (`SPUD_RESIZE_ARRAY` with a
   capacity beside each) and the D3D12 backend's leftover `std::vector`s
   and `std::string`s, through `EQ_ARRAY`, `eq::array` and `eq::string`,
-  with the instance's `SPUD_ALLOCATOR` handed over.
+  with the instance's `SPUD_ALLOCATOR` handed over. **Started**
+  (2026-10-29): SpudNet's response headers and wait set are `EQ_ARRAY`s,
+  on `spud_eq_allocator` (`{user_data, allocate, free, NULL}`), tested on
+  macOS (its tests plain and under ASan, and SpudNet's fuzz targets, whose
+  allocator refuses part way, 5 minutes each). Left: WASAPI, GameInput,
+  evdev and D3D12's arrays, and D3D12's `std::` containers, each when it
+  can be built on its platform.
 - ApricotFields, trellislib and Latran: plain-data arrays as `eq::array`,
   the rest as `eq::vector` / `eq::string`, converted as code is changed,
   with the system heap until a caller allocator is decided (paused card
