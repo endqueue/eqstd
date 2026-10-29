@@ -7,6 +7,13 @@
 #include <stddef.h>
 #include <stdio.h>
 
+/* MSVC warns (C4611) at every setjmp in C++. The jumps here cross only
+ * frames with no destructors to run (the accessors and on_index_error),
+ * which C++ allows. */
+#if defined(_MSC_VER) && defined(__cplusplus)
+#pragma warning(disable : 4611)
+#endif
+
 static jmp_buf index_error_jump;
 static size_t index_error_index;
 static size_t index_error_count;

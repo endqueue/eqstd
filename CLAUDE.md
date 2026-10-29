@@ -83,8 +83,13 @@ Objective-C++. Run Debug, Release, `-asan` and `-tsan` after every change.
 
 What has run: macOS (Apple clang 21, arm64), 2026-10-28: Debug, Release and
 RelWithDebInfo with Ninja Multi-Config, Debug with Xcode, and the `-asan` and
-`-tsan` presets, all nine tests, no sanitizer report. Not yet run on Linux
-(GCC) or Windows (MSVC).
+`-tsan` presets, all nine tests, no sanitizer report. Windows 11 (MSVC
+14.51), 2026-10-29: Debug, Release and RelWithDebInfo with the
+`eqstd-windows` preset (Visual Studio 18 2026), and Debug under
+`eqstd-windows-asan` (MSVC's AddressSanitizer), all seven tests (the two
+Objective-C ones are Apple's), no report; `/W4 /WX` needed two warnings
+silenced in the tests (`C4324` on the deliberately over-aligned element,
+`C4611` on the index test's `setjmp`). Not yet run on Linux (GCC).
 
 ## Version
 

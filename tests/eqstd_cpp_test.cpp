@@ -157,10 +157,18 @@ static counting counting_state;
 struct three {
 	unsigned char bytes[3];
 };
+// MSVC warns (C4324) that the alignment pads the struct, which is the point.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4324)
+#endif
 struct alignas(64) over_aligned {
 	double x;
 	double y;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 template <typename T>
 static T random_element()

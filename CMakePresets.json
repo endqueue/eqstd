@@ -102,6 +102,27 @@
         "eqstd-linux"
       ],
       "binaryDir": "${sourceDir}/build-linux-tsan"
+    },
+    {
+      "name": "eqstd-windows-sanitize-asan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "/Ob0 /Od /fsanitize=address",
+        "CMAKE_CXX_FLAGS_DEBUG": "/Ob0 /Od /fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_DEBUG": "/debug /INCREMENTAL:NO",
+        "CMAKE_SHARED_LINKER_FLAGS_DEBUG": "/debug /INCREMENTAL:NO",
+        "CMAKE_MODULE_LINKER_FLAGS_DEBUG": "/debug /INCREMENTAL:NO"
+      }
+    },
+    {
+      "name": "eqstd-windows-asan",
+      "displayName": "eqstd Windows ASan",
+      "inherits": [
+        "eqstd-windows-sanitize-asan",
+        "eqstd-windows"
+      ],
+      "binaryDir": "${sourceDir}/build-windows-asan"
     }
   ],
   "buildPresets": [
@@ -200,6 +221,12 @@
       "displayName": "eqstd Linux TSan (Debug)",
       "configurePreset": "eqstd-linux-tsan",
       "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-windows-asan-debug",
+      "displayName": "eqstd Windows ASan (Debug)",
+      "configurePreset": "eqstd-windows-asan",
+      "configuration": "Debug"
     }
   ],
   "testPresets": [
@@ -247,6 +274,18 @@
       },
       "environment": {
         "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1"
+      }
+    },
+    {
+      "name": "eqstd-windows-asan",
+      "configurePreset": "eqstd-windows-asan",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "ASAN_OPTIONS": "halt_on_error=1:check_initialization_order=1:strict_init_order=1",
+        "PATH": "$penv{VCToolsInstallDir}bin/Hostx64/x64;$penv{PATH}"
       }
     }
   ]
