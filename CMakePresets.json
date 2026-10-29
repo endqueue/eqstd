@@ -1,0 +1,253 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "eqstd-windows",
+      "displayName": "eqstd Windows",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-windows",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo"
+      }
+    },
+    {
+      "name": "eqstd-linux",
+      "displayName": "eqstd Linux",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build-linux",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo"
+      }
+    },
+    {
+      "name": "eqstd-macos",
+      "displayName": "eqstd macOS",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build-macos",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo"
+      }
+    },
+    {
+      "name": "eqstd-macos-xcode",
+      "displayName": "eqstd macOS (Xcode)",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build-xcode-macos",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo"
+      }
+    },
+    {
+      "name": "eqstd-sanitize-asan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_C_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer",
+        "CMAKE_OBJC_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer",
+        "CMAKE_OBJCXX_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=address,undefined",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
+    },
+    {
+      "name": "eqstd-sanitize-tsan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_C_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer",
+        "CMAKE_OBJC_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer",
+        "CMAKE_OBJCXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=thread"
+      }
+    },
+    {
+      "name": "eqstd-macos-asan",
+      "displayName": "eqstd macOS ASan+UBSan",
+      "inherits": [
+        "eqstd-sanitize-asan",
+        "eqstd-macos"
+      ],
+      "binaryDir": "${sourceDir}/build-macos-asan"
+    },
+    {
+      "name": "eqstd-macos-tsan",
+      "displayName": "eqstd macOS TSan",
+      "inherits": [
+        "eqstd-sanitize-tsan",
+        "eqstd-macos"
+      ],
+      "binaryDir": "${sourceDir}/build-macos-tsan"
+    },
+    {
+      "name": "eqstd-linux-asan",
+      "displayName": "eqstd Linux ASan+UBSan",
+      "inherits": [
+        "eqstd-sanitize-asan",
+        "eqstd-linux"
+      ],
+      "binaryDir": "${sourceDir}/build-linux-asan"
+    },
+    {
+      "name": "eqstd-linux-tsan",
+      "displayName": "eqstd Linux TSan",
+      "inherits": [
+        "eqstd-sanitize-tsan",
+        "eqstd-linux"
+      ],
+      "binaryDir": "${sourceDir}/build-linux-tsan"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "eqstd-windows-debug",
+      "displayName": "eqstd Windows (Debug)",
+      "configurePreset": "eqstd-windows",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-windows-release",
+      "displayName": "eqstd Windows (Release)",
+      "configurePreset": "eqstd-windows",
+      "configuration": "Release"
+    },
+    {
+      "name": "eqstd-windows-relwithdebinfo",
+      "displayName": "eqstd Windows (RelWithDebInfo)",
+      "configurePreset": "eqstd-windows",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "eqstd-linux-debug",
+      "displayName": "eqstd Linux (Debug)",
+      "configurePreset": "eqstd-linux",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-linux-release",
+      "displayName": "eqstd Linux (Release)",
+      "configurePreset": "eqstd-linux",
+      "configuration": "Release"
+    },
+    {
+      "name": "eqstd-linux-relwithdebinfo",
+      "displayName": "eqstd Linux (RelWithDebInfo)",
+      "configurePreset": "eqstd-linux",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "eqstd-macos-debug",
+      "displayName": "eqstd macOS (Debug)",
+      "configurePreset": "eqstd-macos",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-macos-release",
+      "displayName": "eqstd macOS (Release)",
+      "configurePreset": "eqstd-macos",
+      "configuration": "Release"
+    },
+    {
+      "name": "eqstd-macos-relwithdebinfo",
+      "displayName": "eqstd macOS (RelWithDebInfo)",
+      "configurePreset": "eqstd-macos",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "eqstd-macos-xcode-debug",
+      "displayName": "eqstd macOS (Xcode) (Debug)",
+      "configurePreset": "eqstd-macos-xcode",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-macos-xcode-release",
+      "displayName": "eqstd macOS (Xcode) (Release)",
+      "configurePreset": "eqstd-macos-xcode",
+      "configuration": "Release"
+    },
+    {
+      "name": "eqstd-macos-xcode-relwithdebinfo",
+      "displayName": "eqstd macOS (Xcode) (RelWithDebInfo)",
+      "configurePreset": "eqstd-macos-xcode",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "eqstd-macos-asan-debug",
+      "displayName": "eqstd macOS ASan+UBSan (Debug)",
+      "configurePreset": "eqstd-macos-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-macos-tsan-debug",
+      "displayName": "eqstd macOS TSan (Debug)",
+      "configurePreset": "eqstd-macos-tsan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-linux-asan-debug",
+      "displayName": "eqstd Linux ASan+UBSan (Debug)",
+      "configurePreset": "eqstd-linux-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "eqstd-linux-tsan-debug",
+      "displayName": "eqstd Linux TSan (Debug)",
+      "configurePreset": "eqstd-linux-tsan",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "eqstd-macos-asan",
+      "configurePreset": "eqstd-macos-asan",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "ASAN_OPTIONS": "halt_on_error=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "eqstd-macos-tsan",
+      "configurePreset": "eqstd-macos-tsan",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1"
+      }
+    },
+    {
+      "name": "eqstd-linux-asan",
+      "configurePreset": "eqstd-linux-asan",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "ASAN_OPTIONS": "halt_on_error=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "eqstd-linux-tsan",
+      "configurePreset": "eqstd-linux-tsan",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1"
+      }
+    }
+  ]
+}

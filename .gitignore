@@ -1,0 +1,16 @@
+# Build folders, one per preset
+build/
+build-*/
+cmake-build-*/
+CMakeUserPresets.json
+
+# Editors
+.vs/
+.vscode/
+.idea/
+
+# Claude Code worktrees
+.claude/worktrees/
+
+# macOS Finder metadata
+.DS_Store
