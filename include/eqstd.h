@@ -974,6 +974,14 @@ static inline EQ_RESULT eq_internal_array_insert_at(EQ_INTERNAL_ARRAY *a, size_t
 		return EQ_RESULT_INVALID_ARGUMENT;
 	if (n > SIZE_MAX - a->count)
 		return EQ_RESULT_TOO_LARGE;
+	/* Appended into room the block has: nothing moves, and the new elements
+	 * land past every existing one, so items that are the array's own are
+	 * copied from where they are. */
+	if (index == a->count && n <= a->capacity - a->count) {
+		memcpy(EQ_INTERNAL_CAST(unsigned char *, a->data) + a->count * element_size, items, n * element_size);
+		a->count += n;
+		return EQ_SUCCESS;
+	}
 	/* Growing may move the array's own elements: remember where they were. */
 	offset = eq_internal_offset_in(a->data, a->count * element_size, items);
 	result = eq_internal_array_grow_at(a, element_size, a->count + n, 0);

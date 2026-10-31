@@ -90,6 +90,9 @@ RelWithDebInfo with Ninja Multi-Config, Debug with Xcode, and the `-asan` and
 Objective-C ones are Apple's), no report; `/W4 /WX` needed two warnings
 silenced in the tests (`C4324` on the deliberately over-aligned element,
 `C4611` on the index test's `setjmp`). Not yet run on Linux (GCC).
+On 2026-10-31, the append fast path (an append into room the block has
+copies the items straight in): Windows 11, the same four configurations,
+all seven tests, no report; macOS not yet run.
 
 ## Version
 
