@@ -157,18 +157,16 @@ static counting counting_state;
 struct three {
 	unsigned char bytes[3];
 };
-// MSVC warns (C4324) that the alignment pads the struct, which is the point.
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4324)
-#endif
+// Aligned past max_align_t. Its 64 bytes are all members: the tests compare
+// elements byte for byte, and padding has no value a copy must keep (GCC 16 at
+// -O3 copies only x and y into std::vector, so padding made the comparison
+// fail with eq::array correct).
 struct alignas(64) over_aligned {
 	double x;
 	double y;
+	unsigned char rest[48];
 };
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+static_assert(sizeof(over_aligned) == 64);
 
 template <typename T>
 static T random_element()

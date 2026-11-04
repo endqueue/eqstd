@@ -89,7 +89,20 @@ RelWithDebInfo with Ninja Multi-Config, Debug with Xcode, and the `-asan` and
 `eqstd-windows-asan` (MSVC's AddressSanitizer), all seven tests (the two
 Objective-C ones are Apple's), no report; `/W4 /WX` needed two warnings
 silenced in the tests (`C4324` on the deliberately over-aligned element,
-`C4611` on the index test's `setjmp`). Not yet run on Linux (GCC).
+since made all members so nothing pads it; `C4611` on the index test's
+`setjmp`). Linux, Fedora 44 (GCC 16.2.1, the ThinkPad P1), 2026-11-04:
+Debug and Release with `eqstd-linux`, all seven tests, after two fixes
+GCC 16 asked for: `EQ_INTERNAL_ITEMS` names the array only inside `sizeof`
+(g++ 16 reported a sequence point on it in the unevaluated arm of `1 ? items
+: a->data`), and `over_aligned`'s 48 padding bytes became a member (at -O3
+std::vector's copy kept only `x` and `y`, so the byte comparison failed
+with eq::array right). `EQ_INTERNAL_NODISCARD` became the standard
+`[[nodiscard]]` in C23 and C++17, GCC's `warn_unused_result` before: GCC's
+attribute ignores a `(void)` cast, which callers write for a discard they
+mean. `-asan` and `-tsan` not run there: GCC's sanitizer runtimes weren't
+installed. Not yet run with the change: macOS and Windows (MSVC's C++
+reports `__cplusplus` as 199711 without `/Zc:__cplusplus`, so there the
+macro stays empty, as before).
 On 2026-10-31, the append fast path (an append into room the block has
 copies the items straight in): Windows 11, the same four configurations,
 all seven tests, no report; macOS not yet run.

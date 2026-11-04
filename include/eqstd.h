@@ -69,12 +69,22 @@ extern "C" {
 #define EQ_INTERNAL_NULL NULL
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
+/* A result is used or cast to void: the standard nodiscard where the
+ * language has it (C23, C++17), which every compiler lets a (void) cast
+ * silence, then GCC's and Clang's attribute (GCC's ignores the cast). */
+#if (defined(__cplusplus) && __cplusplus >= 201703L) ||                                                                \
+	(!defined(__cplusplus) && defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L)
+#define EQ_INTERNAL_NODISCARD [[nodiscard]]
+#elif defined(__GNUC__) || defined(__clang__)
 #define EQ_INTERNAL_NODISCARD __attribute__((warn_unused_result))
+#else
+#define EQ_INTERNAL_NODISCARD
+#endif
+
+#if defined(__GNUC__) || defined(__clang__)
 #define EQ_INTERNAL_NORETURN __attribute__((noreturn))
 #define EQ_INTERNAL_PRINTF(format_index, first_argument) __attribute__((format(printf, format_index, first_argument)))
 #else
-#define EQ_INTERNAL_NODISCARD
 #if defined(_MSC_VER)
 #define EQ_INTERNAL_NORETURN __declspec(noreturn)
 #else
@@ -680,8 +690,11 @@ typedef struct EQ_INTERNAL_ARRAY {
 	(sizeof(*(a)->data) + 0u * sizeof(char[sizeof(*(a)) == sizeof(EQ_INTERNAL_ARRAY) ? 1 : -1]))
 
 /* `items`, evaluated once and `a` not at all, as a pointer of the array's
- * element type: a pointer of another type doesn't compile (C++) or warns (C). */
-#define EQ_INTERNAL_ITEMS(a, items) (1 ? (items) : (a)->data)
+ * element type: a pointer of another type doesn't compile (C++) or warns (C).
+ * `a` is named only inside sizeof: GCC 16's C++ front end reports a sequence
+ * point on `a` in the unevaluated arm of a conditional (`1 ? items :
+ * a->data`), which this form never had. */
+#define EQ_INTERNAL_ITEMS(a, items) ((void)sizeof((items) == (a)->data), EQ_INTERNAL_CAST(const void *, (items)))
 
 EQ_INTERNAL_NORETURN static inline void eq_internal_index_error(size_t index, size_t count, const char *file, int line);
 static inline size_t eq_internal_check_index(size_t index, size_t count, const char *file, int line);
