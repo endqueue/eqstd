@@ -8,7 +8,7 @@ repository was made.
 **Status (2026-10-28):** built, 0.1.0. Both headers, the tests and the
 presets are written, and every test passes on macOS in Debug, Release and
 RelWithDebInfo, with Xcode, and under the `-asan` and `-tsan` presets, with
-no sanitizer report. Pushed as `endqueue/eqstd` (b302f96). spudlib uses it
+no sanitizer report. Pushed as `endqueue/eqstd` (b302f96). carrottus uses it
 since 2026-10-29 ("Who uses it" below). Left: the Linux and Windows runs,
 the rest of the workspace wiring ("The repository and the workspace"
 below), and the hash map if it is wanted. "Decided while building it" at the end lists the choices the
@@ -23,9 +23,9 @@ spec left open.
   Nothing else: no algorithms (the standard ones work on its spans and
   iterators), math, threading or I/O. A proposal outside that line is a no.
 - **Never in a public API.** Its types are for code inside a library; no
-  function of SpudLib, ApricotFields, trellislib or Latran takes or returns
+  function of Carrottus, Rabbittus, trellislib or Latran takes or returns
   one, so no library's ABI depends on eqstd's layout.
-- Apache 2.0, as spudlib and ApricotFields, so both may use it.
+- Apache 2.0, as carrottus and Rabbittus, so both may use it.
 
 ## The C half, `eqstd.h`
 
@@ -33,7 +33,7 @@ Prefix `eq_` / `EQ_`. C11, also compiled as C++ and Objective-C.
 
 - **`EQ_ALLOCATOR`:** allocate, resize and free through a caller's
   function pointers and context, each told the size and alignment (as
-  `SPUD_ALLOCATOR` is, so spudlib's can be handed over as it is or by a
+  `CR_ALLOCATOR` is, so carrottus's can be handed over as it is or by a
   trivial adapter). A null `EQ_ALLOCATOR *` means the system heap.
 - **`EQ_ARRAY(T)`:** declares a typed struct `{ T *data; size_t count;
   size_t capacity; const EQ_ALLOCATOR *allocator; }`. Elements are read and
@@ -61,12 +61,12 @@ Namespace `eq::`. Over the C half, not beside it.
 - **`eq::string`:** owns UTF-8 text, with a short-string buffer so short
   names don't allocate; `std::string_view` for reading; built on
   `EQ_STRING`'s growth.
-- Later, if wanted: the open-addressing hash map (as `apri_hash_index`).
+- Later, if wanted: the open-addressing hash map (as `rbt_hash_index`).
 
 ## Tests
 
 - Every container against `std::vector` / `std::string` as the reference,
-  by random operations (ApricotFields' brute-force style), in C and C++.
+  by random operations (Rabbittus' brute-force style), in C and C++.
 - A counting allocator: every allocation freed, with the size and
   alignment it was made with.
 - Out of memory: an allocator that fails at the nth call, every result
@@ -82,29 +82,29 @@ Namespace `eq::`. Over the C half, not beside it.
   `eqstd`, the tests, a README with the scope line, `LICENSE`. **Done.**
 - `projects.conf` names it, so `sync.sh` and `status.sh` cover it. The
   GitHub repository (`endqueue/eqstd`) is created and pushed by the user.
-- trellis and Latran pin it in `deps.lock`; spudlib and ApricotFields find
+- trellis and Latran pin it in `deps.lock`; carrottus and Rabbittus find
   it at `../eqstd`, with a pinned fetch fallback, as their `.deps` are.
-  **spudlib: done** (2026-10-29): `spud_add_workspace_or_fetch` in its
+  **carrottus: done** (2026-10-29): `cr_add_workspace_or_fetch` in its
   `CMakeLists.txt` adds `../eqstd` when it is there, else fetches b302f96,
-  and links `eqstd` PRIVATE. trellis, latran and ApricotFields build it
-  through `../spudlib` today (checked on macOS); ApricotFields' own use and
+  and links `eqstd` PRIVATE. trellis, latran and Rabbittus build it
+  through `../carrottus` today (checked on macOS); Rabbittus' own use and
   the `deps.lock` entries are not done.
 - `check.sh`: eqstd may be included by any layer and includes none.
 - Its own semantic version (root `CLAUDE.md`, "Versions and releases").
 
 ## Who uses it, once it exists
 
-- spudlib: its C backends' hand-grown arrays (`SPUD_RESIZE_ARRAY` with a
+- carrottus: its C backends' hand-grown arrays (`CR_RESIZE_ARRAY` with a
   capacity beside each) and the D3D12 backend's leftover `std::vector`s
   and `std::string`s, through `EQ_ARRAY`, `eq::array` and `eq::string`,
-  with the instance's `SPUD_ALLOCATOR` handed over. **Started**
-  (2026-10-29): SpudNet's response headers and wait set are `EQ_ARRAY`s,
-  on `spud_eq_allocator` (`{user_data, allocate, free, NULL}`), tested on
-  macOS (its tests plain and under ASan, and SpudNet's fuzz targets, whose
+  with the instance's `CR_ALLOCATOR` handed over. **Started**
+  (2026-10-29): Carrottus Net's response headers and wait set are `EQ_ARRAY`s,
+  on `cr_eq_allocator` (`{user_data, allocate, free, NULL}`), tested on
+  macOS (its tests plain and under ASan, and Carrottus Net's fuzz targets, whose
   allocator refuses part way, 5 minutes each). Left: WASAPI, GameInput,
   evdev and D3D12's arrays, and D3D12's `std::` containers, each when it
   can be built on its platform.
-- ApricotFields, trellislib and Latran: plain-data arrays as `eq::array`,
+- Rabbittus, trellislib and Latran: plain-data arrays as `eq::array`,
   the rest as `eq::vector` / `eq::string`, converted as code is changed,
   with the system heap until a caller allocator is decided (paused card
   X15).

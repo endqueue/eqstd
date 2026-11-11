@@ -14,7 +14,7 @@ threading or I/O. A proposal outside that line is a no.
 - **It belongs to no layer.** Any C or C++ code in the workspace may include
   it, and it includes nothing of ours: only the C and C++ standard
   libraries. Like glm.
-- **Never in a public API.** No function of SpudLib, ApricotFields,
+- **Never in a public API.** No function of Carrottus, Rabbittus,
   trellislib or Latran takes or returns one of its types, so no library's
   ABI depends on its layout.
 - **eqstd doesn't know who calls it.** Nothing here - code, comments, headers,
@@ -63,8 +63,8 @@ threading or I/O. A proposal outside that line is a no.
   `_DEBUG`) switches the index checks only.
 - **No writable static data, no globals, no threads.** Each object is used by
   one caller at a time.
-- Argument checks one `if` per condition, in parameter order, as SpudLib's
-  and ApricotFields' are.
+- Argument checks one `if` per condition, in parameter order, as Carrottus's
+  and Rabbittus' are.
 - The headers build clean under `-Wall -Wextra -Wpedantic -Wshadow
   -Wconversion -Wsign-conversion -Wcast-qual -Wold-style-cast
   -Wzero-as-null-pointer-constant` and the rest of the tests' list, as
