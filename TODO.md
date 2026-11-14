@@ -14,6 +14,13 @@ the rest of the workspace wiring ("The repository and the workspace"
 below), and the hash map if it is wanted. "Decided while building it" at the end lists the choices the
 spec left open.
 
+**Windows, 2026-11-13** (the ThinkPad P1 Gen 5, Windows 11; MSVC
+19.51.36260, Windows SDK 10.0.26100.0; `prompts/eqc_client_windows_steps1_2.md`,
+"First" 4): `eqstd-windows` built with no warning (`/W4 /WX`) in Debug,
+Release and RelWithDebInfo, every test passing in each (7 of 7), and
+`eqstd-windows-asan` from a Visual Studio developer prompt, 7 of 7, no
+report. Nothing needed changing. Linux is still to run.
+
 ## What it is
 
 - **A header-only library of containers and strings**, belonging to no
