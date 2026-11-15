@@ -19,7 +19,16 @@ spec left open.
 "First" 4): `eqstd-windows` built with no warning (`/W4 /WX`) in Debug,
 Release and RelWithDebInfo, every test passing in each (7 of 7), and
 `eqstd-windows-asan` from a Visual Studio developer prompt, 7 of 7, no
-report. Nothing needed changing. Linux is still to run.
+report. Nothing needed changing.
+
+**Linux, 2026-11-12 and 2026-11-14** (Fedora 44 on the same ThinkPad,
+kernel 6.19.10). 2026-11-12, GCC 16.2.1 (`prompts/rename_linux_verify.md`):
+`eqstd-linux` Debug and Release, `-asan` and `-tsan`, 7 of 7 each, no
+warning, no report. 2026-11-14, again with clang 22.1.8
+(`prompts/fedora_revamp_catchup.md`): `eqstd-linux` Debug and Release
+(GCC, clean rebuilds), and `-asan` and `-tsan` configured into
+`build-linux-asan-clang` and `build-linux-tsan-clang` with clang: 7 of 7
+each, no warning, no report. Nothing needed changing.
 
 ## What it is
 
@@ -79,8 +88,9 @@ Namespace `eq::`. Over the C half, not beside it.
 - Out of memory: an allocator that fails at the nth call, every result
   checked, nothing leaked.
 - Built and run under the `-asan` and `-tsan` presets, on macOS, Linux
-  and Windows. **Done on macOS** (2026-10-28); Linux (GCC) and Windows
-  (MSVC, no sanitizers) not run yet.
+  and Windows. **Done** on macOS (2026-10-28), Linux (GCC 2026-11-12,
+  clang 2026-11-14) and Windows (2026-11-13, MSVC's ASan; it has no
+  TSan).
 
 ## The repository and the workspace
 
